@@ -1,8 +1,11 @@
 # Changelog
 These are the release notes for the RTLTMPro UPM package. 
 
-The github repository is: https://github.com/hk1ll3r/RTLTMPro
-The parent repository is: https://github.com/mnarimani/RTLTMPro
+The github repository is: https://github.com/engage-xr/RTLTMPro
+The parent repository is: https://github.com/hk1ll3r/RTLTMPro
+
+# v3.4.6 (2024/03/26)
+- Update to Unity 2022
 
 # v3.4.3 (2022/03/14)
 - General bug fixes and improvements.
