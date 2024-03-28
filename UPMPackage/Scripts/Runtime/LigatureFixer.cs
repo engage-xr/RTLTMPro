@@ -111,15 +111,15 @@ namespace RTLTMPro
                         bool isBeforeRTLCharacter = Char32Utils.IsRTLCharacter(nextCharacter);
                         bool isBeforeWhiteSpace = Char32Utils.IsWhiteSpace(nextCharacter);
                         bool isAfterWhiteSpace = Char32Utils.IsWhiteSpace(previousCharacter);
+                        bool isAfterNumber = Char32Utils.IsNumber(previousCharacter, preserveNumbers, farsi);
                         bool isUnderline = characterAtThisIndex == '_';
-                        bool isSpecialPunctuation = characterAtThisIndex == '.' ||
-                                                    characterAtThisIndex == '،' ||
-                                                    characterAtThisIndex == '؛';
+                        bool isSpecialPunctuation = characterAtThisIndex is '.' or '،' or '؛' or '؟';
 
                         if (isBeforeRTLCharacter && isAfterRTLCharacter ||
                             isAfterWhiteSpace && isSpecialPunctuation ||
                             isBeforeWhiteSpace && isAfterRTLCharacter ||
                             isBeforeRTLCharacter && isAfterWhiteSpace ||
+                            isBeforeWhiteSpace && isAfterNumber && isSpecialPunctuation ||
                             (isBeforeRTLCharacter || isAfterRTLCharacter) && isUnderline)
                         {
                             FlushBufferToOutput(LtrTextHolder, output);
@@ -130,7 +130,20 @@ namespace RTLTMPro
                         }
                     } else if (isAtEnd)
                     {
-                        LtrTextHolder.Add(characterAtThisIndex);
+                        // Check to see if the punctuation comes at the end of the string and follows a number
+                        bool isAfterNumber = Char32Utils.IsNumber(previousCharacter, preserveNumbers, farsi);
+                        bool isSpecialPunctuation = characterAtThisIndex is '.' or '،' or '؛' or '؟';
+
+                        if (isAfterNumber && isSpecialPunctuation)
+                        {
+                            FlushBufferToOutput(LtrTextHolder, output);
+                            output.Append(characterAtThisIndex);
+                        }
+                        else
+                        {
+                            LtrTextHolder.Add(characterAtThisIndex);
+                        }
+
                     } else if (isAtBeginning)
                     {
                         output.Append(characterAtThisIndex);

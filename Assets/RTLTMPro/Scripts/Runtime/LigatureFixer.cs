@@ -113,10 +113,7 @@ namespace RTLTMPro
                         bool isAfterWhiteSpace = Char32Utils.IsWhiteSpace(previousCharacter);
                         bool isAfterNumber = Char32Utils.IsNumber(previousCharacter, preserveNumbers, farsi);
                         bool isUnderline = characterAtThisIndex == '_';
-                        bool isSpecialPunctuation = characterAtThisIndex == '.' ||
-                                                    characterAtThisIndex == '،' ||
-                                                    characterAtThisIndex == '؛' ||
-                                                    characterAtThisIndex == '؟';
+                        bool isSpecialPunctuation = characterAtThisIndex is '.' or '،' or '؛' or '؟';
 
                         if (isBeforeRTLCharacter && isAfterRTLCharacter ||
                             isAfterWhiteSpace && isSpecialPunctuation ||
@@ -135,10 +132,7 @@ namespace RTLTMPro
                     {
                         // Check to see if the punctuation comes at the end of the string and follows a number
                         bool isAfterNumber = Char32Utils.IsNumber(previousCharacter, preserveNumbers, farsi);
-                        bool isSpecialPunctuation = characterAtThisIndex == '.' ||
-                                                    characterAtThisIndex == '،' ||
-                                                    characterAtThisIndex == '؛' ||
-                                                    characterAtThisIndex == '؟';
+                        bool isSpecialPunctuation = characterAtThisIndex is '.' or '،' or '؛' or '؟';
 
                         if (isAfterNumber && isSpecialPunctuation)
                         {
