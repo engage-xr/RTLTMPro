@@ -82,9 +82,9 @@ namespace RTLTMPro
             }
         }
 
-        [SerializeField] protected bool preserveNumbers;
+        [SerializeField] protected bool preserveNumbers = true;
 
-        [SerializeField] protected bool farsi = true;
+        [SerializeField] protected bool farsi;
 
         [SerializeField] [TextArea(3, 10)] protected string originalText;
 
