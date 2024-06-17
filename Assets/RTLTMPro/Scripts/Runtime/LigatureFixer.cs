@@ -11,7 +11,7 @@ namespace RTLTMPro
             ['('] = ')',
             [')'] = '(',
             ['»'] = '«',
-            ['«'] = '»',
+            ['«'] = '»'
         };
         private static readonly HashSet<char> MirroredCharsSet = new HashSet<char>(MirroredCharsMap.Keys);
         private static void FlushBufferToOutput(List<int> buffer, FastStringBuilder output)
@@ -114,13 +114,17 @@ namespace RTLTMPro
                         bool isAfterNumber = Char32Utils.IsNumber(previousCharacter, preserveNumbers, farsi);
                         bool isUnderline = characterAtThisIndex == '_';
                         bool isSpecialPunctuation = characterAtThisIndex is '.' or '،' or '؛' or '؟';
+                        bool isAfterQuote = Char32Utils.IsQuote(previousCharacter);
+                        bool isBeforeQuote = Char32Utils.IsQuote(nextCharacter);
 
                         if (isBeforeRTLCharacter && isAfterRTLCharacter ||
                             isAfterWhiteSpace && isSpecialPunctuation ||
                             isBeforeWhiteSpace && isAfterRTLCharacter ||
                             isBeforeRTLCharacter && isAfterWhiteSpace ||
                             isBeforeWhiteSpace && isAfterNumber && isSpecialPunctuation ||
-                            (isBeforeRTLCharacter || isAfterRTLCharacter) && isUnderline)
+                            isBeforeQuote ||
+                            isAfterQuote  ||
+                            (isBeforeRTLCharacter || isAfterRTLCharacter) && isUnderline) 
                         {
                             FlushBufferToOutput(LtrTextHolder, output);
                             output.Append(characterAtThisIndex);
@@ -130,11 +134,15 @@ namespace RTLTMPro
                         }
                     } else if (isAtEnd)
                     {
-                        // Check to see if the punctuation comes at the end of the string and follows a number
+                        // Check if the punctuation comes at the end of the string and follows a number
                         bool isAfterNumber = Char32Utils.IsNumber(previousCharacter, preserveNumbers, farsi);
                         bool isSpecialPunctuation = characterAtThisIndex is '.' or '،' or '؛' or '؟';
 
-                        if (isAfterNumber && isSpecialPunctuation)
+                        // Check if the punctuation comes at the end of the string and follows a quotation mark
+                        bool isAfterQuote = Char32Utils.IsQuote(previousCharacter);
+
+                        if (isAfterNumber && isSpecialPunctuation ||
+                            isAfterQuote && isSpecialPunctuation)
                         {
                             FlushBufferToOutput(LtrTextHolder, output);
                             output.Append(characterAtThisIndex);
