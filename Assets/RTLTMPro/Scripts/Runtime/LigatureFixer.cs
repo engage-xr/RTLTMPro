@@ -152,8 +152,7 @@ namespace RTLTMPro
                         // Check if the punctuation comes at the end of the string and follows a quotation mark
                         bool isAfterQuote = Char32Utils.IsQuote(previousCharacter);
 
-                        if (isAfterNumber && isSpecialPunctuation ||
-                            isAfterQuote && isSpecialPunctuation)
+                        if (isSpecialPunctuation && (isAfterNumber || isAfterQuote))
                         {
                             FlushBufferToOutput(LtrTextHolder, output);
                             output.Append(characterAtThisIndex);
