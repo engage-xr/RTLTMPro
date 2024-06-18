@@ -101,9 +101,6 @@ namespace RTLTMPro
                         bool isAfterQuote = Char32Utils.IsQuote(previousCharacter);                 // Corrects reversed brackets next to quote marks
                         bool isBeforeQuote = Char32Utils.IsQuote(nextCharacter);
 
-                        //bool isAfterQuote = false;
-                        //bool isBeforeQuote = false;
-
                         if (isAfterRTLCharacter || isBeforeRTLCharacter || isAfterQuote || isBeforeQuote)
                         {
                             characterAtThisIndex = MirroredCharsMap[(char)characterAtThisIndex];
