@@ -98,8 +98,13 @@ namespace RTLTMPro
                         // IsRTLCharacter returns false for null
                         bool isAfterRTLCharacter = Char32Utils.IsRTLCharacter(previousCharacter);
                         bool isBeforeRTLCharacter = Char32Utils.IsRTLCharacter(nextCharacter);
+                        bool isAfterQuote = Char32Utils.IsQuote(previousCharacter);                 // Corrects reversed brackets next to quote marks
+                        bool isBeforeQuote = Char32Utils.IsQuote(nextCharacter);
 
-                        if (isAfterRTLCharacter || isBeforeRTLCharacter)
+                        //bool isAfterQuote = false;
+                        //bool isBeforeQuote = false;
+
+                        if (isAfterRTLCharacter || isBeforeRTLCharacter || isAfterQuote || isBeforeQuote)
                         {
                             characterAtThisIndex = MirroredCharsMap[(char)characterAtThisIndex];
                         }
@@ -114,16 +119,25 @@ namespace RTLTMPro
                         bool isAfterNumber = Char32Utils.IsNumber(previousCharacter, preserveNumbers, farsi);
                         bool isUnderline = characterAtThisIndex == '_';
                         bool isSpecialPunctuation = characterAtThisIndex is '.' or '،' or '؛' or '؟';
+                        bool isBeforeSpecialPunctuation = nextCharacter is '.' or '،' or '؛' or '؟';
                         bool isAfterQuote = Char32Utils.IsQuote(previousCharacter);
                         bool isBeforeQuote = Char32Utils.IsQuote(nextCharacter);
+                        bool isClosingBracket = characterAtThisIndex is '(';
+                        bool isOpeningBracket = characterAtThisIndex is ')';
+                        bool isBeforeBracket = nextCharacter is ')' or '(';
+                        bool isAfterBracket = previousCharacter is ')' or '(';
+                        bool isQuote = Char32Utils.IsQuote(characterAtThisIndex);
 
                         if (isBeforeRTLCharacter && isAfterRTLCharacter ||
                             isAfterWhiteSpace && isSpecialPunctuation ||
                             isBeforeWhiteSpace && isAfterRTLCharacter ||
                             isBeforeRTLCharacter && isAfterWhiteSpace ||
                             isBeforeWhiteSpace && isAfterNumber && isSpecialPunctuation ||
-                            isBeforeQuote ||
-                            isAfterQuote  ||
+                            isClosingBracket && isBeforeQuote ||                            // Corrects "( in "(المريخ)"
+                            isOpeningBracket && isAfterQuote ||                             // Corrects )" in "(المريخ)"
+                            isQuote && isAfterBracket ||                                    // Corrects ") in .("المريخ") and :"( in :"(المريخ)":
+                            isQuote && isBeforeBracket ||                                   // Corrects (" in ("المريخ") and )": in :"(المريخ)":
+                            isClosingBracket && isBeforeSpecialPunctuation ||               // Corrects .( in .(المريخ)
                             (isBeforeRTLCharacter || isAfterRTLCharacter) && isUnderline) 
                         {
                             FlushBufferToOutput(LtrTextHolder, output);
