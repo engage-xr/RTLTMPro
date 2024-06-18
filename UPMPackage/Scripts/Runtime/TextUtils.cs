@@ -79,6 +79,12 @@ namespace RTLTMPro
                 || ch >= ArabicPresentationFormsBBlockLow && ch <= ArabicPresentationFormsBBlockHigh;
         }
 
+        // Checks if the character is a quote symbol. Either the generic " or guillemets
+        public static bool IsQuote(char input)
+        {
+            return input is '"' or '«' or '»';
+        }
+
         /// <summary>
         ///     Checks if the character is supported RTL character.
         /// </summary>
