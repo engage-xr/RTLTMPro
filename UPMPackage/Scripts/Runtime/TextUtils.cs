@@ -31,6 +31,9 @@ namespace RTLTMPro
         private const char ArabicPresentationFormsBBlockLow  = (char)0xFE70;
         private const char ArabicPresentationFormsBBlockHigh = (char)0xFEFF;
 
+        private const char LeftGuillemet = '\u00AB';  // «
+        private const char RightGuillemet = '\u00BB'; // »
+
         public static bool IsPunctuation(char ch)
         {
             throw new NotImplementedException();
@@ -77,6 +80,12 @@ namespace RTLTMPro
                 || ch >= ArabicExtendedBBlockLow && ch <= ArabicExtendedBBlockHigh
                 || ch >= ArabicPresentationFormsABlockLow && ch <= ArabicPresentationFormsABlockHigh
                 || ch >= ArabicPresentationFormsBBlockLow && ch <= ArabicPresentationFormsBBlockHigh;
+        }
+
+        // Checks if the character is a quote symbol. Either the generic " or guillemets
+        public static bool IsQuote(char input)
+        {
+            return input is '"' or LeftGuillemet or RightGuillemet;
         }
 
         /// <summary>

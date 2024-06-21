@@ -48,6 +48,10 @@ namespace RTLTMPro {
             return char.IsWhiteSpace((char)ch);
         }
 
-        
+        public static bool IsQuote(int ch)
+        {
+            if (!IsUnicode16Char(ch)) return false;
+            return TextUtils.IsQuote((char)ch);
+        }
     }
 }
