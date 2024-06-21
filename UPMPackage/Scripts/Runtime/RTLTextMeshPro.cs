@@ -123,6 +123,13 @@ namespace RTLTMPro
                 base.text = rtlText;
             }
 
+            // Correct any existing strings that were set RTL, since the new code does the reversal instead
+            //  isRightToLeftText is a property of the extended TMPro class
+            if (isRightToLeftText)
+            {
+                isRightToLeftText = false;
+            }
+
             havePropertiesChanged = true;
         }
 
