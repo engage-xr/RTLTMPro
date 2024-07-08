@@ -9,14 +9,6 @@ namespace RTLTMPro.Tests
 {
     public class EngageOrderingTests
     {
-        // Code to log the encoded output
-        /*
-            foreach (char c in result)
-            {
-                Debug.Log("\\u" + ((int)c).ToString("X4"));
-            }
-        */
-
         // Tests need to replicate what happens in RTLTextMeshPro.GetFixedText()
         //  If you change the code in that method, make the same changes to this function
         protected string simulatedUpdateText(string text, bool Farsi, bool FixTags, bool PreserveNumbers)
@@ -167,28 +159,5 @@ namespace RTLTMPro.Tests
             // Assert
             Assert.AreEqual(encodedExpected, result);
         }
-
-        // Use of RTLTextMeshPro fails due to missing TMPro references that I can't resolve
-        /*
-        [Test]
-        public void DirectTest()
-        {
-            // Arrange
-            var text = new FastStringBuilder("فيديو 360؟ انتقل إلى غرفة 360");
-
-            RTLTextMeshPro rtlTMP = new RTLTextMeshPro();
-            rtlTMP.text = text;
-            rtlTMP.PreserveNumbers = true;
-            rtlTMP.Farsi = true;
-            rtlTMP.FixTags = true;
-            rtlTMP.ForceFix = false;
-
-            // Act
-            //string result = rtlTMP.UpdateText();
-
-            // Assert
-
-        }
-        */
     }
 }
