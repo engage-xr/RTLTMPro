@@ -432,7 +432,7 @@ namespace RTLTMPro
 
                 if (char.IsLetter(character))
                 {
-                    return IsRTLCharacter(character);
+                    if (IsRTLCharacter(character)) return true;
                 }
             }
 
