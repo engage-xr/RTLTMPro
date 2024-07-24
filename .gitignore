@@ -62,3 +62,4 @@ crashlytics-build.properties
 # Raw image files
 *.xcf
 UserSettings
+*.DS_Store
