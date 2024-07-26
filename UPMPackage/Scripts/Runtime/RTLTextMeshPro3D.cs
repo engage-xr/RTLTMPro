@@ -94,6 +94,8 @@ namespace RTLTMPro
 
         protected readonly FastStringBuilder finalText = new FastStringBuilder(RTLSupport.DefaultBufferSize);
 
+        protected string resultOfLastProcess = null;
+
         protected void Update()
         {
             if (havePropertiesChanged)
@@ -112,10 +114,12 @@ namespace RTLTMPro
                 isRightToLeftText = false;
                 base.text = originalText;
             }
-            else
+            else if (originalText != resultOfLastProcess)  // If originalText == resultOfLastProcess, we're trying to process a string for a second time
             {
                 isRightToLeftText = true;
                 base.text = GetFixedText(originalText);
+
+                resultOfLastProcess = base.text;            // Store the processed string
             }
 
             havePropertiesChanged = true;
