@@ -455,8 +455,13 @@ namespace RTLTMPro
                 // Loop and add a chunk each time that the text switches between RTL and LTR
                 for (int i = 1; i < input.Length; i++)      //  Start at char 1
                 {
-                    if (IsRTLCharacter(input[i]) == rtlChunk){
-
+                    //if (IsRTLCharacter(input[i]) == rtlChunk){
+                    if (IsRTLCharacter(input[i]) == rtlChunk)
+                    {
+                        buffer += input[i];
+                    }
+                    else if (input[i] == ' ')   // Prevent space breaking Arabic strings into chunks
+                    {
                         buffer += input[i];
                     }
                     else
