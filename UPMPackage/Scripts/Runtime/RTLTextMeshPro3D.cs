@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace RTLTMPro
 {
@@ -112,7 +113,7 @@ namespace RTLTMPro
             if (ForceFix == false && TextUtils.IsRTLInput(originalText) == false)
             {
                 isRightToLeftText = false;
-                base.text = originalText;
+                base.text = GetChunkFixedText(originalText);
             }
             else if (originalText != resultOfLastProcess)  // If originalText == resultOfLastProcess, we're trying to process a string for a second time
             {
@@ -123,6 +124,38 @@ namespace RTLTMPro
             }
 
             havePropertiesChanged = true;
+        }
+
+        private string GetChunkFixedText(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            FastStringBuilder arChunkFixer = new FastStringBuilder(RTLSupport.DefaultBufferSize);
+
+            string recombinedString = "";
+            List<string> chunks = TextUtils.SplitLtrRtlChunks(input);
+
+            // Loop over chunks. Fix RTL and just append LTR
+            for (int i = 0; i < chunks.Count; i++)
+            {
+
+                if (TextUtils.IsRTLInput(chunks[i]))
+                {
+                    arChunkFixer.Clear();
+
+                    // Fix the Arabic block of text
+                    RTLSupport.FixRTL(chunks[i], arChunkFixer, farsi, fixTags, preserveNumbers);
+
+                    recombinedString += arChunkFixer.ToString();
+                }
+                else
+                {
+                    recombinedString += chunks[i];  // If LTR chunk, just append
+                }
+            }
+
+            return recombinedString;
         }
 
         private string GetFixedText(string input)

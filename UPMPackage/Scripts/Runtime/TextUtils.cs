@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace RTLTMPro
 {
@@ -432,11 +433,54 @@ namespace RTLTMPro
 
                 if (char.IsLetter(character))
                 {
-                    if (IsRTLCharacter(character)) return true;
+                    //if (IsRTLCharacter(character)) return true;
+
+                    return IsRTLCharacter(character);
                 }
             }
 
             return false;
+        }
+
+        public static List<string> SplitLtrRtlChunks(string input)
+        {
+            List<string> chunks = new List<string>();
+
+            if (input.Length > 0)
+            {
+                string buffer = "";
+                buffer += input[0];                         // Initialise with char 0
+                bool rtlChunk = IsRTLCharacter(input[0]);
+
+                // Loop and add a chunk each time that the text switches between RTL and LTR
+                for (int i = 1; i < input.Length; i++)      //  Start at char 1
+                {
+                    if (IsRTLCharacter(input[i]) == rtlChunk){
+
+                        buffer += input[i];
+                    }
+                    else
+                    {
+                        // Change between RTL and LTR
+                        chunks.Add(buffer);
+
+                        buffer = "";
+                        buffer += input[i];
+                        rtlChunk = IsRTLCharacter(input[i]);
+                    }
+                }
+
+                if (buffer.Length > 0)  // Flush the buffer
+                {
+                    chunks.Add(buffer);
+                }
+            }
+            else
+            {
+                chunks.Add(input);  // Adding an empty string
+            }
+
+            return chunks;
         }
     }
 }
