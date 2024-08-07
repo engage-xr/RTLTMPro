@@ -114,7 +114,8 @@ namespace RTLTMPro
             {
                 isRightToLeftText = false;
                 base.text = GetChunkFixedText(originalText);
-            } else if(originalText != resultOfLastProcess)  // If originalText == resultOfLastProcess, we're trying to process a string for a second time
+            } 
+            else if(originalText != resultOfLastProcess)  // If originalText == resultOfLastProcess, we're trying to process a string for a second time
             {
                 isRightToLeftText = true;
                 base.text = GetFixedText(originalText);
@@ -130,7 +131,7 @@ namespace RTLTMPro
             if (string.IsNullOrEmpty(input))
                 return input;
 
-            string recombinedString = "";
+            FastStringBuilder recombinedString = new FastStringBuilder("");
             List<string> chunks = TextUtils.SplitLtrRtlChunks(input);
 
             FastStringBuilder arChunkFixer = new FastStringBuilder(RTLSupport.DefaultBufferSize);
@@ -149,7 +150,7 @@ namespace RTLTMPro
                 }
                 else
                 {
-                    recombinedString += chunks[i];  // If LTR chunk, just append
+                    recombinedString += chunks[i]; // If LTR chunk, just append
                 }
             }
 

@@ -131,15 +131,14 @@ namespace RTLTMPro
             if (string.IsNullOrEmpty(input))
                 return input;
 
-            FastStringBuilder arChunkFixer = new FastStringBuilder(RTLSupport.DefaultBufferSize);
-
-            string recombinedString = "";
+            FastStringBuilder recombinedString = new FastStringBuilder("");
             List<string> chunks = TextUtils.SplitLtrRtlChunks(input);
+
+            FastStringBuilder arChunkFixer = new FastStringBuilder(RTLSupport.DefaultBufferSize);
 
             // Loop over chunks. Fix RTL and just append LTR
             for (int i = 0; i < chunks.Count; i++)
             {
-
                 if (TextUtils.IsRTLInput(chunks[i]))
                 {
                     arChunkFixer.Clear();
@@ -151,7 +150,7 @@ namespace RTLTMPro
                 }
                 else
                 {
-                    recombinedString += chunks[i];  // If LTR chunk, just append
+                    recombinedString += chunks[i]; // If LTR chunk, just append
                 }
             }
 

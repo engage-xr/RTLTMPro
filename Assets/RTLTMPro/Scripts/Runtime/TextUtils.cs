@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections;
 
 namespace RTLTMPro
 {
@@ -32,8 +31,8 @@ namespace RTLTMPro
         private const char ArabicPresentationFormsBBlockLow  = (char)0xFE70;
         private const char ArabicPresentationFormsBBlockHigh = (char)0xFEFF;
 
-        private const char LeftGuillemet = '\u00AB';  // «
-        private const char RightGuillemet = '\u00BB'; // »
+        private const char LeftGuillemet = '\u00AB';  // ï¿½
+        private const char RightGuillemet = '\u00BB'; // ï¿½
 
         public static bool IsPunctuation(char ch)
         {
@@ -407,7 +406,7 @@ namespace RTLTMPro
         }
         
         /// <summary>
-        ///     Checks if the input string starts with supported RTL character or not.
+        /// Checks if the input string starts with supported RTL character or not.
         /// </summary>
         /// <returns><see langword="true" /> if input is RTL. otherwise <see langword="false" /></returns>
         public static bool IsRTLInput(string input)
@@ -433,8 +432,6 @@ namespace RTLTMPro
 
                 if (char.IsLetter(character))
                 {
-                    //if (IsRTLCharacter(character)) return true;
-
                     return IsRTLCharacter(character);
                 }
             }
@@ -448,21 +445,38 @@ namespace RTLTMPro
 
             if (input.Length > 0)
             {
-                string buffer = "";
+                FastStringBuilder buffer = "";
                 buffer += input[0];                         // Initialise with char 0
                 bool rtlChunk = IsRTLCharacter(input[0]);
 
                 // Loop and add a chunk each time that the text switches between RTL and LTR
                 for (int i = 1; i < input.Length; i++)      //  Start at char 1
                 {
-                    //if (IsRTLCharacter(input[i]) == rtlChunk){
+                    if (input[i] == ' ' && i < input.Length - 1)
+                    {
+                        if (!rtlChunk)
+                        {
+                            buffer.Append(input[i]);
+                            continue;
+                        }
+                        
+                        if (IsRTLCharacter(input[i + 1]))
+                        {
+                            buffer.Append(input[i]);
+                        }
+                        else
+                        {
+                            chunks.Add(buffer);
+                            buffer.Clear();
+                            buffer.Append(input[i]);
+                            rtlChunk = false;
+                        }
+                        continue;
+                    }
+
                     if (IsRTLCharacter(input[i]) == rtlChunk)
                     {
-                        buffer += input[i];
-                    }
-                    else if (input[i] == ' ')   // Prevent space breaking Arabic strings into chunks
-                    {
-                        buffer += input[i];
+                        buffer.Append(input[i]);
                     }
                     else
                     {
