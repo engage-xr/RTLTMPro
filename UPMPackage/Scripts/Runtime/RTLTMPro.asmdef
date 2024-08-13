@@ -1,7 +1,9 @@
 {
     "name": "RTLTMPro",
+    "rootNamespace": "",
     "references": [
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "Unity.Localization"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

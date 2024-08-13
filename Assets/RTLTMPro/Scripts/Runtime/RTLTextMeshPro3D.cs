@@ -1,5 +1,7 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 namespace RTLTMPro
 {
@@ -69,17 +71,9 @@ namespace RTLTMPro
             }
         }
 
-        protected bool ForceFix
+        private static bool ForceFix
         {
-            get { return forceFix; }
-            set
-            {
-                if (forceFix == value)
-                    return;
-
-                forceFix = value;
-                havePropertiesChanged = true;
-            }
+            get => LocalizationSettings.SelectedLocale != null && LocalizationSettings.SelectedLocale.Identifier.CultureInfo.TextInfo.IsRightToLeft;
         }
 
         [SerializeField] protected bool preserveNumbers;
@@ -109,11 +103,11 @@ namespace RTLTMPro
             if (originalText == null)
                 originalText = "";
 
-            if (ForceFix == false && TextUtils.IsRTLInput(originalText) == false)
+            if (!ForceFix)
             {
                 isRightToLeftText = false;
-                base.text = originalText;
-            }
+                base.text = GetChunkFixedText(originalText);
+            } 
             else if (originalText != resultOfLastProcess)  // If originalText == resultOfLastProcess, we're trying to process a string for a second time
             {
                 isRightToLeftText = true;
@@ -125,6 +119,37 @@ namespace RTLTMPro
             havePropertiesChanged = true;
         }
 
+        private string GetChunkFixedText(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            FastStringBuilder recombinedString = new FastStringBuilder("");
+            List<string> chunks = TextUtils.SplitLtrRtlChunks(input);
+
+            FastStringBuilder arChunkFixer = new FastStringBuilder(RTLSupport.DefaultBufferSize);
+
+            // Loop over chunks. Fix RTL and just append LTR
+            for (int i = 0; i < chunks.Count; i++)
+            {
+                if (TextUtils.IsRTLInput(chunks[i]))
+                {
+                    arChunkFixer.Clear();
+
+                    // Fix the Arabic block of text
+                    RTLSupport.FixRTL(chunks[i], arChunkFixer, farsi, fixTags, preserveNumbers);
+
+                    recombinedString += arChunkFixer.ToString();
+                }
+                else
+                {
+                    recombinedString += chunks[i]; // If LTR chunk, just append
+                }
+            }
+
+            return recombinedString;
+        }
+
         private string GetFixedText(string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -133,7 +158,6 @@ namespace RTLTMPro
             finalText.Clear();
             RTLSupport.FixRTL(input, finalText, farsi, fixTags, preserveNumbers);
             finalText.Reverse();
-
             return finalText.ToString();
         }
     }

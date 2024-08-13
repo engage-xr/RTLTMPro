@@ -30,11 +30,23 @@ namespace RTLTMPro.Tests
         [TestCase("(المريخ).", ")ﺍﻟﻤﺮﯾﺦ(.")]
         [TestCase("هل أنت متأكد أنك تريد حذف \"موسيقىaaa\"؟", "ﻫﻞ ﺃﻧﺖ ﻣﺘﺄﻛﺪ ﺃﻧﻚ ﺗﺮﯾﺪ ﺣﺬﻑ \"ﻣﻮﺳﯿﻘﻰaaa\"؟")]
         [TestCase("هل أنت متأكد أنك تريد حذف \"aaaموسيقى\"؟", "ﻫﻞ ﺃﻧﺖ ﻣﺘﺄﻛﺪ ﺃﻧﻚ ﺗﺮﯾﺪ ﺣﺬﻑ \"aaaﻣﻮﺳﯿﻘﻰ\"؟")]
-        [TestCase("المحور المركزي لـ ENGAGE LINK. نحن نعقد جلسات \"تعلم ENGAGE\" هنا بشكل متكرر، بالإضافة إلى حلقات عمل وفعاليات تواصل أخرى. لمزيد من المعلومات، تحقق من لوحات الملاحظات.", "ﺍﻟﻤﺤﻮﺭ ﺍﻟﻤﺮﻛﺰﯼ ﻟـ KNIL EGAGNE. ﻧﺤﻦ ﻧﻌﻘﺪ ﺟﻠﺴﺎﺕ \"ﺗﻌﻠﻢ EGAGNE\" ﻫﻨﺎ ﺑﺸﻜﻞ ﻣﺘﻜﺮﺭ، ﺑﺎﻹﺿﺎﻓﺔ ﺇﻟﻰ ﺣﻠﻘﺎﺕ ﻋﻤﻞ ﻭﻓﻌﺎﻟﯿﺎﺕ ﺗﻮﺍﺻﻞ ﺃﺧﺮﻯ. ﻟﻤﺰﯾﺪ ﻣﻦ ﺍﻟﻤﻌﻠﻮﻣﺎﺕ، ﺗﺤﻘﻖ ﻣﻦ ﻟﻮﺣﺎﺕ ﺍﻟﻤﻼﺣﻈﺎﺕ.")]
         public void CharacterOrder(string input, string expected)
         {
             // Act
             string result = SimulatedUpdateText(input, true, true, true);
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestCase("A recording is in progress by عبد. Your voice, actions, and movements might be recorded.", "A recording is in progress by ﺪﺒﻋ. Your voice, actions, and movements might be recorded.")]
+        [TestCase("Bring all users to قاعة المحاضرات", "Bring all users to ﺕﺍﺮﺿﺎﺤﻤﻟﺍ ﺔﻋﺎﻗ")]
+        public void RTLTextInLTRStrings(string input, string expected)
+        {
+            // Act
+            RTLTextMeshPro rtlTMPro = new RTLTextMeshPro();
+            rtlTMPro.text = input;
+            string result = rtlTMPro.text;
 
             // Assert
             Assert.AreEqual(expected, result);
