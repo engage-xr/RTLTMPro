@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace RTLTMPro {
     public static class Char32Utils {
@@ -40,6 +41,7 @@ namespace RTLTMPro {
 
         public static bool IsPunctuation(int ch) {
             if (!IsUnicode16Char(ch)) return false;
+            if (ch == '\u00A0') return true;
             return char.IsPunctuation((char)ch);
         }
 
