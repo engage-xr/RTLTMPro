@@ -40,6 +40,7 @@ namespace RTLTMPro {
 
         public static bool IsPunctuation(int ch) {
             if (!IsUnicode16Char(ch)) return false;
+            if (ch == '\u00A0') return true;
             return char.IsPunctuation((char)ch);
         }
 
