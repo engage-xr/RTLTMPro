@@ -1,6 +1,7 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine.Localization.Settings;
 
 namespace RTLTMPro
 {
@@ -70,17 +71,9 @@ namespace RTLTMPro
             }
         }
 
-        protected bool ForceFix
+        private static bool ForceFix
         {
-            get { return forceFix; }
-            set
-            {
-                if (forceFix == value)
-                    return;
-
-                forceFix = value;
-                havePropertiesChanged = true;
-            }
+            get => LocalizationSettings.SelectedLocale != null && LocalizationSettings.SelectedLocale.Identifier.CultureInfo.TextInfo.IsRightToLeft;
         }
 
         [SerializeField] protected bool preserveNumbers;
@@ -110,11 +103,11 @@ namespace RTLTMPro
             if (originalText == null)
                 originalText = "";
 
-            if (ForceFix == false && TextUtils.IsRTLInput(originalText) == false)
+            if (!ForceFix)
             {
                 isRightToLeftText = false;
                 base.text = GetChunkFixedText(originalText);
-            }
+            } 
             else if (originalText != resultOfLastProcess)  // If originalText == resultOfLastProcess, we're trying to process a string for a second time
             {
                 isRightToLeftText = true;
@@ -165,7 +158,6 @@ namespace RTLTMPro
             finalText.Clear();
             RTLSupport.FixRTL(input, finalText, farsi, fixTags, preserveNumbers);
             finalText.Reverse();
-
             return finalText.ToString();
         }
     }

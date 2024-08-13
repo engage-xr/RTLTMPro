@@ -1,6 +1,7 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine.Localization.Settings;
 
 namespace RTLTMPro
 {
@@ -70,17 +71,9 @@ namespace RTLTMPro
             }
         }
 
-        public bool ForceFix
+        private static bool ForceFix
         {
-            get { return forceFix; }
-            set
-            {
-                if (forceFix == value)
-                    return;
-
-                forceFix = value;
-                havePropertiesChanged = true;
-            }
+            get => LocalizationSettings.SelectedLocale != null && LocalizationSettings.SelectedLocale.Identifier.CultureInfo.TextInfo.IsRightToLeft;
         }
 
         [SerializeField] protected bool preserveNumbers = true;
@@ -110,7 +103,7 @@ namespace RTLTMPro
             if (originalText == null)
                 originalText = "";
 
-            if (ForceFix == false && TextUtils.IsRTLInput(originalText) == false)
+            if (!ForceFix)
             {
                 isRightToLeftText = false;
                 base.text = GetChunkFixedText(originalText);
