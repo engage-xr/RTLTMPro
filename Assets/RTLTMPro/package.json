@@ -1,7 +1,7 @@
 {
   "name": "com.engage.rtltmpro",
   "displayName": "RTL Text Mesh Pro",
-  "version": "3.4.6-engage.2",
+  "version": "3.4.7-engage",
   "unity": "2022.3",
   "description": "This package adds Right-to-left language support to TextMeshPro Unity package. Supports Persian, Arabic and Hebrew.",
   "keywords": [
@@ -14,6 +14,13 @@
     "Farsi",
     "Persian",
     "Hebrew"
+  ],
+  "samples": [
+    {
+      "displayName": "Samples",
+      "description": "Scenes with sample inputs and text layouts",
+      "path": "Samples~"
+    }
   ],
   "main": "index.js",
   "scripts": {
