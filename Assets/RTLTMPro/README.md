@@ -4,7 +4,7 @@ You need to have `TextMeshPro` plugin in your project. You can install TMPro via
 
 Currently Arabic, Farsi and Hebrew are supported. If you find an issue with one of these languages or want support for another RTL language, open an issue.
 
-[![openupm](https://img.shields.io/npm/v/com.nosuchstudio.rtltmpro?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.nosuchstudio.rtltmpro/)
+[![openupm](https://img.shields.io/npm/v/com.engage.rtltmpro?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.engage.rtltmpro/)
 
 - [Features](#features)
 - [Installation](#installation)
@@ -134,7 +134,3 @@ When checked, RTL Text Mesh Pro will try to fix rich text tags.
   
 # Contribution
 All contributions are welcome. Make sure you follow the project's code style. We actively monitor pull requests.
-
-Contact: 
-- sorencoder@gmail.com
-- hossein.shbz@gmail.com
