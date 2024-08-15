@@ -103,7 +103,7 @@ namespace RTLTMPro
             if (originalText == null)
                 originalText = "";
 
-            if (!ForceFix && !TextUtils.IsRTLInput(originalText))
+            if (!ForceFix)
             {
                 isRightToLeftText = false;
                 base.text = GetChunkFixedText(originalText);
