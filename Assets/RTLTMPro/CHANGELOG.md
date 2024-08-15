@@ -4,10 +4,15 @@ These are the release notes for the RTLTMPro UPM package.
 The github repository is: https://github.com/engage-xr/RTLTMPro
 The parent repository is: https://github.com/hk1ll3r/RTLTMPro
 
-# v3.4.7 (2024/08/14)
+# v3.4.6-engage.3 (2024/08/15)
 - Project restructure
 
-# v3.4.6 (2024/03/26)
+# v3.4.6-engage.2 (2024/08/13)
+- Added RTL in LTR chunking
+- Added support for non-breaking space
+- Switched ForceFix to reply on Localization Settings
+
+# v3.4.6-engage.1 (2024/03/26)
 - Update to Unity 2022
 
 # v3.4.3 (2022/03/14)
