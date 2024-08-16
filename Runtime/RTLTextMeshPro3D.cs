@@ -43,7 +43,8 @@ namespace RTLTMPro
             if (originalText != resultOfLastProcess)
             {
                 RTLSupport.FixText(originalText, output, isRightToLeftText, farsi, fixTags, preserveNumbers);
-                resultOfLastProcess = text = output.ToString();
+                base.text = output.ToString();
+                resultOfLastProcess = base.text;
             }
 
             havePropertiesChanged = true;
