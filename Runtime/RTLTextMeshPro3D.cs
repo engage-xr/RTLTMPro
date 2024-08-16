@@ -11,7 +11,6 @@ namespace RTLTMPro
         [SerializeField] protected bool farsi = true;
         [SerializeField][TextArea(3, 10)] protected string originalText;
         [SerializeField] protected bool fixTags = true;
-        [SerializeField] protected bool forceFix;
 
         private bool isInputField;
 
