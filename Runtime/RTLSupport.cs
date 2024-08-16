@@ -35,7 +35,7 @@ namespace RTLTMPro
         /// <param name="preserveNumbers"></param>
         /// <param name="farsi"></param>
         /// <returns>Fixed text</returns>
-        internal static void FixRTL(string input, FastStringBuilder output, bool farsi = true, bool fixTextTags = true, bool preserveNumbers = false)
+        private static void FixRTL(string input, FastStringBuilder output, bool farsi = true, bool fixTextTags = true, bool preserveNumbers = false)
         {
             inputBuilder.SetValue(input);
             TashkeelFixer.RemoveTashkeel(inputBuilder);
@@ -54,11 +54,11 @@ namespace RTLTMPro
             inputBuilder.Clear();
         }
 
-        internal static void FixRTLChunked(string input, FastStringBuilder output, bool farsi = true, bool fixTextTags = true, bool preserveNumbers = false)
+        private static void FixRTLChunked(string input, FastStringBuilder output, bool farsi = true, bool fixTextTags = true, bool preserveNumbers = false)
         {
             List<string> chunks = TextUtils.SplitLtrRtlChunks(input);
 
-            FastStringBuilder arChunkFixer = new FastStringBuilder(RTLSupport.DefaultBufferSize);
+            var arChunkFixer = new FastStringBuilder(DefaultBufferSize);
 
             // Loop over chunks. Fix RTL and just append LTR
             for (int i = 0; i < chunks.Count; i++)
@@ -70,11 +70,11 @@ namespace RTLTMPro
                     // Fix the Arabic block of text
                     FixRTL(chunks[i], arChunkFixer, farsi, fixTextTags, preserveNumbers);
 
-                    output += arChunkFixer.ToString();
+                    output.Append(arChunkFixer.ToString());
                 }
                 else
                 {
-                    output += chunks[i]; // If LTR chunk, just append
+                    output.Append(chunks[i]); // If LTR chunk, just append
                 }
             }
         }
