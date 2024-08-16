@@ -37,15 +37,16 @@ namespace RTLTMPro
         public void UpdateText()
         {
             originalText = string.IsNullOrEmpty(originalText) ? string.Empty : originalText;
-            isRightToLeftText = IsRightToLeftLocale || (isInputField && TextUtils.IsRTLInput(originalText));
 
-            if (originalText != resultOfLastProcess)
-            {
-                RTLSupport.FixText(originalText, output, isRightToLeftText, farsi, fixTags, preserveNumbers);
-                base.text = output.ToString();
-                resultOfLastProcess = base.text;
-            }
+            bool isRightToLeft = IsRightToLeftLocale || (isInputField && TextUtils.IsRTLInput(originalText));
+            bool process = isRightToLeftText != isRightToLeft || originalText != resultOfLastProcess;
+            isRightToLeftText = isRightToLeft;
 
+            if (!process) return;
+
+            RTLSupport.FixText(originalText, output, isRightToLeftText, farsi, fixTags, preserveNumbers);
+
+            resultOfLastProcess = base.text = output.ToString();
             havePropertiesChanged = true;
         }
 
