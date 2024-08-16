@@ -4,17 +4,6 @@ namespace RTLTMPro.Tests
 {
     public class EngageOrderingTests
     {
-        // Tests need to replicate what happens in RTLTextMeshPro.GetFixedText()
-        //  If you change the code in that method, make the same changes to this function
-        protected string SimulatedUpdateText(string text, bool Farsi, bool FixTags, bool PreserveNumbers)
-        {
-            var output = new FastStringBuilder(RTLSupport.DefaultBufferSize);
-            RTLSupport.FixRTL(text, output, Farsi, FixTags, PreserveNumbers);
-            output.Reverse();
-
-            return output.ToString();
-        }
-
         [TestCase("فيديو 360؟ انتقل إلى غرفة 360", "ﻓﯿﺪﯾﻮ 063؟ ﺍﻧﺘﻘﻞ ﺇﻟﻰ ﻏﺮﻓﺔ 063")]
         [TestCase("فيديو 360.", "ﻓﯿﺪﯾﻮ 063.")]
         [TestCase("فيديو (360)", "ﻓﯿﺪﯾﻮ )063(")]
@@ -25,26 +14,32 @@ namespace RTLTMPro.Tests
         [TestCase("(المريخ).", ")ﺍﻟﻤﺮﯾﺦ(.")]
         [TestCase("هل أنت متأكد أنك تريد حذف \"موسيقىaaa\"؟", "ﻫﻞ ﺃﻧﺖ ﻣﺘﺄﻛﺪ ﺃﻧﻚ ﺗﺮﯾﺪ ﺣﺬﻑ \"ﻣﻮﺳﯿﻘﻰaaa\"؟")]
         [TestCase("هل أنت متأكد أنك تريد حذف \"aaaموسيقى\"؟", "ﻫﻞ ﺃﻧﺖ ﻣﺘﺄﻛﺪ ﺃﻧﻚ ﺗﺮﯾﺪ ﺣﺬﻑ \"aaaﻣﻮﺳﯿﻘﻰ\"؟")]
-        public void CharacterOrder(string input, string expected)
+        [TestCase("انتقل إلى http://www.google.com/test?mode=true", "انتقل إلىﺍﻧﺘﻘﻞ ﺇﻟﻰ eurt=edom?tset/moc.elgoog.www//:ptth")]
+        public void CharacterOrderRTL(string input, string expected)
         {
-            // Act
-            string result = SimulatedUpdateText(input, true, true, true);
-
-            // Assert
-            Assert.AreEqual(expected, result);
+            AssertTextFix(input, expected, true);
         }
 
         [TestCase("A recording is in progress by عبد. Your voice, actions, and movements might be recorded.", "A recording is in progress by ﺪﺒﻋ. Your voice, actions, and movements might be recorded.")]
+        [TestCase("عبد is recording.", "ﺪﺒﻋ is recording.")]
         [TestCase("Bring all users to قاعة المحاضرات", "Bring all users to ﺕﺍﺮﺿﺎﺤﻤﻟﺍ ﺔﻋﺎﻗ")]
         public void RTLTextInLTRStrings(string input, string expected)
         {
-            // Act
-            RTLTextMeshPro rtlTMPro = new RTLTextMeshPro();
-            rtlTMPro.text = input;
-            string result = rtlTMPro.text;
+            AssertTextFix(input, expected, false);
+        }
 
-            // Assert
-            Assert.AreEqual(expected, result);
+        [TestCase("François speaks Español", "François speaks Español")]
+        public void NonEnglishCharacters(string input, string expected)
+        {
+            AssertTextFix(input, expected, false);
+        }
+
+        private void AssertTextFix(string input, string expected, bool isRightToLeft)
+        {
+            var output = new FastStringBuilder(RTLSupport.DefaultBufferSize);
+            RTLSupport.FixText(input, output, isRightToLeft, true, true, true);
+
+            Assert.AreEqual(expected, output.ToString());
         }
     }
 }
