@@ -134,14 +134,14 @@ namespace RTLTMPro
                             isBeforeWhiteSpace && isAfterRTLCharacter ||
                             isBeforeRTLCharacter && isAfterWhiteSpace ||
                             isBeforeWhiteSpace && isAfterNumber && isSpecialPunctuation ||
-                            isClosingBracket && isBeforeQuote ||                            // Corrects "( in "(المريخ)"
-                            isOpeningBracket && isAfterQuote ||                             // Corrects )" in "(المريخ)"
-                            isQuote && isAfterBracket ||                                    // Corrects ") in .("المريخ") and :"( in :"(المريخ)":
-                            isQuote && isBeforeBracket ||                                   // Corrects (" in ("المريخ") and )": in :"(المريخ)":
-                            isClosingBracket && isBeforeSpecialPunctuation ||               // Corrects .( in .(المريخ)
-                            isQuote && (isAfterLetter || isAfterNumber) ||                  // Corrects "aaa in "aaaموسيقى" 
-                            isQuote && (isBeforeLetter || isBeforeNumber) ||                // Corrects aaa" in "موسيقىaaa"
-                            isSpecialPunctuation && isAfterLetter ||                        // Corrects .E in .ENGAGE LINK
+                            isClosingBracket && isBeforeQuote ||                                // Corrects "( in "(المريخ)"
+                            isOpeningBracket && isAfterQuote ||                                 // Corrects )" in "(المريخ)"
+                            isQuote && isAfterBracket ||                                        // Corrects ") in .("المريخ") and :"( in :"(المريخ)":
+                            isQuote && isBeforeBracket ||                                       // Corrects (" in ("المريخ") and )": in :"(المريخ)":
+                            isClosingBracket && isBeforeSpecialPunctuation ||                   // Corrects .( in .(المريخ)
+                            isQuote && (isAfterLetter || isAfterNumber) ||                      // Corrects "aaa in "aaaموسيقى" 
+                            isQuote && (isBeforeLetter || isBeforeNumber) ||                    // Corrects aaa" in "موسيقىaaa"
+                            isSpecialPunctuation && isAfterLetter && !isBeforeLetter ||         // Corrects .E in .ENGAGE LINK, email and url
                             (isBeforeRTLCharacter || isAfterRTLCharacter) && isUnderline) 
                         {
                             FlushBufferToOutput(LtrTextHolder, output);
