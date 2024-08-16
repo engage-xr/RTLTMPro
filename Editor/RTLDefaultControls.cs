@@ -147,7 +147,7 @@ namespace RTLTMPro
 
             RTLTextMeshPro text = childText.AddComponent<RTLTextMeshPro>();
             text.text = "";
-            text.enableWordWrapping = false;
+            text.textWrappingMode = TextWrappingModes.NoWrap;
             text.extraPadding = true;
             text.richText = true;
             text.autoSizeTextContainer = true;
@@ -166,7 +166,7 @@ namespace RTLTMPro
             placeholder.fontSizeMin = 10;
             placeholder.fontSizeMax = 100;
             placeholder.fontStyle = FontStyles.Italic;
-            placeholder.enableWordWrapping = false;
+            placeholder.textWrappingMode = TextWrappingModes.NoWrap;
             placeholder.extraPadding = true;
             placeholder.alignment = TextAlignmentOptions.Right;
 
@@ -250,8 +250,8 @@ namespace RTLTMPro
             templateImage.type = Image.Type.Sliced;
 
             ScrollRect templateScrollRect = template.AddComponent<ScrollRect>();
-            templateScrollRect.content = (RectTransform) content.transform;
-            templateScrollRect.viewport = (RectTransform) viewport.transform;
+            templateScrollRect.content = (RectTransform)content.transform;
+            templateScrollRect.viewport = (RectTransform)viewport.transform;
             templateScrollRect.horizontal = false;
             templateScrollRect.movementType = ScrollRect.MovementType.Clamped;
             templateScrollRect.verticalScrollbar = scrollbarScrollbar;
