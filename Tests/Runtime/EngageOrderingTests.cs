@@ -14,7 +14,7 @@ namespace RTLTMPro.Tests
         [TestCase("(المريخ).", ")ﺍﻟﻤﺮﯾﺦ(.")]
         [TestCase("هل أنت متأكد أنك تريد حذف \"موسيقىaaa\"؟", "ﻫﻞ ﺃﻧﺖ ﻣﺘﺄﻛﺪ ﺃﻧﻚ ﺗﺮﯾﺪ ﺣﺬﻑ \"ﻣﻮﺳﯿﻘﻰaaa\"؟")]
         [TestCase("هل أنت متأكد أنك تريد حذف \"aaaموسيقى\"؟", "ﻫﻞ ﺃﻧﺖ ﻣﺘﺄﻛﺪ ﺃﻧﻚ ﺗﺮﯾﺪ ﺣﺬﻑ \"aaaﻣﻮﺳﯿﻘﻰ\"؟")]
-        [TestCase("انتقل إلى http://www.google.com/test?mode=true", "انتقل إلىﺍﻧﺘﻘﻞ ﺇﻟﻰ eurt=edom?tset/moc.elgoog.www//:ptth")]
+        [TestCase("انتقل إلى http://www.google.com/test?mode=true", "ﺍﻧﺘﻘﻞ ﺇﻟﻰ eurt=edom?tset/moc.elgoog.www//:ptth")]
         public void CharacterOrderRTL(string input, string expected)
         {
             AssertTextFix(input, expected, true);
