@@ -179,8 +179,8 @@ namespace RTLTMPro
 
                 if (isInMiddle)
                 {
-                    bool isAfterLTRChar = !Char32Utils.IsRTLCharacter(previousCharacter);
-                    bool isBeforeLTRChar = !Char32Utils.IsRTLCharacter(nextCharacter);
+                    bool isAfterLTRLetter = Char32Utils.IsLetter(previousCharacter) && !Char32Utils.IsRTLCharacter(previousCharacter);
+                    bool isBeforeLTRLetter = Char32Utils.IsLetter(previousCharacter) && !Char32Utils.IsRTLCharacter(nextCharacter);
                     bool isAfterNumber = Char32Utils.IsNumber(previousCharacter, preserveNumbers, farsi);
                     bool isBeforeNumber = Char32Utils.IsNumber(nextCharacter, preserveNumbers, farsi);
                     bool isAfterSymbol = Char32Utils.IsSymbol(previousCharacter);
@@ -189,16 +189,17 @@ namespace RTLTMPro
                     // For cases where english words and farsi/arabic are mixed. This allows for using farsi/arabic, english and numbers in one sentence.
                     // If the space is between numbers,symbols or English words, keep the order
                     if (characterAtThisIndex == ' ' &&
-                        (isBeforeLTRChar || isBeforeNumber || isBeforeSymbol) &&
-                        (isAfterLTRChar || isAfterNumber || isAfterSymbol))
+                        (isBeforeLTRLetter || isBeforeNumber || isBeforeSymbol) &&
+                        (isAfterLTRLetter || isAfterNumber || isAfterSymbol))
                     {
                         LtrTextHolder.Add(characterAtThisIndex);
                         continue;
                     }
                 }
 
-                if (!Char32Utils.IsRTLCharacter(characterAtThisIndex) ||
-                    Char32Utils.IsNumber(characterAtThisIndex, preserveNumbers, farsi))
+                bool isLTRLetter = Char32Utils.IsLetter(characterAtThisIndex) && !Char32Utils.IsRTLCharacter(characterAtThisIndex);
+
+                if (isLTRLetter || Char32Utils.IsNumber(characterAtThisIndex, preserveNumbers, farsi))
                 {
                     LtrTextHolder.Add(characterAtThisIndex);
                     continue;
