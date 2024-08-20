@@ -431,6 +431,36 @@ namespace RTLTMPro
             return false;
         }
 
+        public static bool ContainsRTLCharacter(string input)
+        {
+            bool insideTag = false;
+            foreach (char character in input)
+            {
+                switch (character)
+                {
+                    case '<':
+                        insideTag = true;
+                        continue;
+
+                    case '>':
+                        insideTag = false;
+                        continue;
+                }
+
+                if (insideTag)
+                {
+                    continue;
+                }
+
+                if (char.IsLetter(character) && IsRTLCharacter(character))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static List<string> SplitLtrRtlChunks(string input)
         {
             List<string> chunks = new List<string>();

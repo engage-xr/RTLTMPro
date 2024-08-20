@@ -38,7 +38,10 @@ namespace RTLTMPro
         {
             originalText = string.IsNullOrEmpty(originalText) ? string.Empty : originalText;
 
-            bool isRightToLeft = IsRightToLeftLocale || (isInputField && TextUtils.IsRTLInput(originalText));
+            bool isRightToLeft =
+                (isInputField && TextUtils.IsRTLInput(originalText)) ||
+                (IsRightToLeftLocale && TextUtils.ContainsRTLCharacter(originalText));
+
             bool process = isRightToLeftText != isRightToLeft || originalText != resultOfLastProcess;
             isRightToLeftText = isRightToLeft;
 
