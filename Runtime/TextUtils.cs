@@ -5,30 +5,24 @@ namespace RTLTMPro
 {
     public static class TextUtils
     {
-        // Every English character is between these two
-        private const char LowerCaseA = (char) 0x61;
-        private const char UpperCaseA = (char) 0x41;
-        private const char LowerCaseZ = (char) 0x7A;
-        private const char UpperCaseZ = (char) 0x5A;
-
-        private const char HebrewLow  = (char) 0x591;
-        private const char HebrewHigh = (char) 0x5F4;
+        private const char HebrewLow = (char)0x591;
+        private const char HebrewHigh = (char)0x5F4;
 
         // base, extended and supplement blocks are the isolated forms which will convert to presentation forms by the textbox.
-        private const char ArabicBaseBlockLow  = (char) 0x600;
-        private const char ArabicBaseBlockHigh = (char) 0x6FF;
+        private const char ArabicBaseBlockLow = (char)0x600;
+        private const char ArabicBaseBlockHigh = (char)0x6FF;
 
-        private const char ArabicExtendedABlockLow  = (char)0x8A0;
+        private const char ArabicExtendedABlockLow = (char)0x8A0;
         private const char ArabicExtendedABlockHigh = (char)0x8FF;
 
-        private const char ArabicExtendedBBlockLow  = (char)0x870;
+        private const char ArabicExtendedBBlockLow = (char)0x870;
         private const char ArabicExtendedBBlockHigh = (char)0x89F;
 
         // presentation forms are final and will be preserved by the textbox
-        private const char ArabicPresentationFormsABlockLow  = (char)0xFB50;
+        private const char ArabicPresentationFormsABlockLow = (char)0xFB50;
         private const char ArabicPresentationFormsABlockHigh = (char)0xFDFF;
 
-        private const char ArabicPresentationFormsBBlockLow  = (char)0xFE70;
+        private const char ArabicPresentationFormsBBlockLow = (char)0xFE70;
         private const char ArabicPresentationFormsBBlockHigh = (char)0xFEFF;
 
         private const char LeftGuillemet = '\u00AB';  // �
@@ -52,29 +46,26 @@ namespace RTLTMPro
 
         public static bool IsEnglishNumber(char ch)
         {
-            return ch >= (char) EnglishNumbers.Zero && ch <= (char) EnglishNumbers.Nine;
+            return ch >= (char)EnglishNumbers.Zero && ch <= (char)EnglishNumbers.Nine;
         }
 
         public static bool IsFarsiNumber(char ch)
         {
-            return ch >= (char) FarsiNumbers.Zero && ch <= (char) FarsiNumbers.Nine;
+            return ch >= (char)FarsiNumbers.Zero && ch <= (char)FarsiNumbers.Nine;
         }
 
         public static bool IsHinduNumber(char ch)
         {
-            return ch >= (char) HinduNumbers.Zero && ch <= (char) HinduNumbers.Nine;
+            return ch >= (char)HinduNumbers.Zero && ch <= (char)HinduNumbers.Nine;
         }
 
-        public static bool IsEnglishLetter(char ch)
+        public static bool IsHebrewCharacter(char ch)
         {
-            return ch >= UpperCaseA && ch <= UpperCaseZ || ch >= LowerCaseA && ch <= LowerCaseZ;
-        }
-
-        public static bool IsHebrewCharacter(char ch) {
             return ch >= HebrewLow && ch <= HebrewHigh;
         }
 
-        public static bool IsArabicCharacter(char ch) {
+        public static bool IsArabicCharacter(char ch)
+        {
             return ch >= ArabicBaseBlockLow && ch <= ArabicBaseBlockHigh
                 || ch >= ArabicExtendedABlockLow && ch <= ArabicExtendedABlockHigh
                 || ch >= ArabicExtendedBBlockLow && ch <= ArabicExtendedBBlockHigh
@@ -93,7 +84,8 @@ namespace RTLTMPro
         /// </summary>
         /// <param name="ch">Character to check</param>
         /// <returns><see langword="true" /> if character is supported. otherwise <see langword="false" /></returns>
-        public static bool IsRTLCharacter(char ch) {
+        public static bool IsRTLCharacter(char ch)
+        {
             if (IsHebrewCharacter(ch)) return true;
             if (IsArabicCharacter(ch)) return true;
             return false;
@@ -404,7 +396,7 @@ namespace RTLTMPro
 
             return false;
         }
-        
+
         /// <summary>
         /// Checks if the input string starts with supported RTL character or not.
         /// </summary>
@@ -439,6 +431,36 @@ namespace RTLTMPro
             return false;
         }
 
+        public static bool ContainsRTLCharacter(string input)
+        {
+            bool insideTag = false;
+            foreach (char character in input)
+            {
+                switch (character)
+                {
+                    case '<':
+                        insideTag = true;
+                        continue;
+
+                    case '>':
+                        insideTag = false;
+                        continue;
+                }
+
+                if (insideTag)
+                {
+                    continue;
+                }
+
+                if (char.IsLetter(character) && IsRTLCharacter(character))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static List<string> SplitLtrRtlChunks(string input)
         {
             List<string> chunks = new List<string>();
@@ -459,7 +481,7 @@ namespace RTLTMPro
                             buffer.Append(input[i]);
                             continue;
                         }
-                        
+
                         if (IsRTLCharacter(input[i + 1]))
                         {
                             buffer.Append(input[i]);

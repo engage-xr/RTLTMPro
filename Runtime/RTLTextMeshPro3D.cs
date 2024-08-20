@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 
@@ -8,7 +7,52 @@ namespace RTLTMPro
     [ExecuteInEditMode]
     public class RTLTextMeshPro3D : TextMeshPro
     {
-        // ReSharper disable once InconsistentNaming
+        [SerializeField] protected bool preserveNumbers;
+        [SerializeField] protected bool farsi = true;
+        [SerializeField][TextArea(3, 10)] protected string originalText;
+        [SerializeField] protected bool fixTags = true;
+
+        private bool isInputField;
+
+        private string resultOfLastProcess = null;
+        private readonly FastStringBuilder output = new(RTLSupport.DefaultBufferSize);
+
+        private bool IsRightToLeftLocale => LocalizationSettings.SelectedLocale != null && LocalizationSettings.SelectedLocale.Identifier.CultureInfo.TextInfo.IsRightToLeft;
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            var inputField = GetComponentInParent<TMP_InputField>();
+            isInputField = inputField != null && inputField.textComponent == this;
+        }
+
+        protected void Update()
+        {
+            if (!havePropertiesChanged) return;
+
+            UpdateText();
+        }
+
+        public void UpdateText()
+        {
+            originalText = string.IsNullOrEmpty(originalText) ? string.Empty : originalText;
+
+            bool isRightToLeft =
+                (isInputField && TextUtils.IsRTLInput(originalText)) ||
+                (IsRightToLeftLocale && TextUtils.ContainsRTLCharacter(originalText));
+
+            bool process = isRightToLeftText != isRightToLeft || originalText != resultOfLastProcess;
+            isRightToLeftText = isRightToLeft;
+
+            if (!process) return;
+
+            RTLSupport.FixText(originalText, output, isRightToLeftText, farsi, fixTags, preserveNumbers);
+            
+            resultOfLastProcess = base.text = output.ToString();
+            havePropertiesChanged = true;
+        }
+
 #if TMP_VERSION_2_1_0_OR_NEWER
         public override string text
 #else
@@ -69,96 +113,6 @@ namespace RTLTMPro
                 fixTags = value;
                 havePropertiesChanged = true;
             }
-        }
-
-        private static bool ForceFix
-        {
-            get => LocalizationSettings.SelectedLocale != null && LocalizationSettings.SelectedLocale.Identifier.CultureInfo.TextInfo.IsRightToLeft;
-        }
-
-        [SerializeField] protected bool preserveNumbers;
-
-        [SerializeField] protected bool farsi = true;
-
-        [SerializeField] [TextArea(3, 10)] protected string originalText;
-
-        [SerializeField] protected bool fixTags = true;
-
-        [SerializeField] protected bool forceFix;
-
-        protected readonly FastStringBuilder finalText = new FastStringBuilder(RTLSupport.DefaultBufferSize);
-
-        protected string resultOfLastProcess = null;
-
-        protected void Update()
-        {
-            if (havePropertiesChanged)
-            {
-                UpdateText();
-            }
-        }
-
-        public void UpdateText()
-        {
-            if (originalText == null)
-                originalText = "";
-
-            if (!ForceFix)
-            {
-                isRightToLeftText = false;
-                base.text = GetChunkFixedText(originalText);
-            } 
-            else if (originalText != resultOfLastProcess)  // If originalText == resultOfLastProcess, we're trying to process a string for a second time
-            {
-                isRightToLeftText = true;
-                base.text = GetFixedText(originalText);
-
-                resultOfLastProcess = base.text;            // Store the processed string
-            }
-
-            havePropertiesChanged = true;
-        }
-
-        private string GetChunkFixedText(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-                return input;
-
-            FastStringBuilder recombinedString = new FastStringBuilder("");
-            List<string> chunks = TextUtils.SplitLtrRtlChunks(input);
-
-            FastStringBuilder arChunkFixer = new FastStringBuilder(RTLSupport.DefaultBufferSize);
-
-            // Loop over chunks. Fix RTL and just append LTR
-            for (int i = 0; i < chunks.Count; i++)
-            {
-                if (TextUtils.IsRTLInput(chunks[i]))
-                {
-                    arChunkFixer.Clear();
-
-                    // Fix the Arabic block of text
-                    RTLSupport.FixRTL(chunks[i], arChunkFixer, farsi, fixTags, preserveNumbers);
-
-                    recombinedString += arChunkFixer.ToString();
-                }
-                else
-                {
-                    recombinedString += chunks[i]; // If LTR chunk, just append
-                }
-            }
-
-            return recombinedString;
-        }
-
-        private string GetFixedText(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-                return input;
-
-            finalText.Clear();
-            RTLSupport.FixRTL(input, finalText, farsi, fixTags, preserveNumbers);
-            finalText.Reverse();
-            return finalText.ToString();
         }
     }
 }

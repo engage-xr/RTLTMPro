@@ -1,5 +1,4 @@
-﻿// ReSharper disable IdentifierTypo
-// ReSharper disable CommentTypo
+﻿using System.Collections.Generic;
 
 namespace RTLTMPro
 {
@@ -7,13 +6,24 @@ namespace RTLTMPro
     {
         public const int DefaultBufferSize = 2048;
 
-        private static FastStringBuilder inputBuilder;
-        private static FastStringBuilder glyphFixerOutput;
+        private static readonly FastStringBuilder inputBuilder = new(DefaultBufferSize);
+        private static readonly FastStringBuilder glyphFixerOutput = new(DefaultBufferSize);
 
-        static RTLSupport()
+        public static void FixText(string input, FastStringBuilder output, bool isRightToLeft, bool farsi = true, bool fixTextTags = true, bool preserveNumbers = false)
         {
-            inputBuilder = new FastStringBuilder(DefaultBufferSize);
-            glyphFixerOutput = new FastStringBuilder(DefaultBufferSize);
+            output.Clear();
+
+            if (string.IsNullOrEmpty(input)) return;
+
+            if (isRightToLeft)
+            {
+                FixRTL(input, output, farsi, fixTextTags, preserveNumbers);
+                output.Reverse();
+            }
+            else
+            {
+                FixRTLChunked(input, output);
+            }
         }
 
         /// <summary>
@@ -25,12 +35,7 @@ namespace RTLTMPro
         /// <param name="preserveNumbers"></param>
         /// <param name="farsi"></param>
         /// <returns>Fixed text</returns>
-        public static void FixRTL(
-            string input,
-            FastStringBuilder output,
-            bool farsi = true,
-            bool fixTextTags = true,
-            bool preserveNumbers = false)
+        private static void FixRTL(string input, FastStringBuilder output, bool farsi = true, bool fixTextTags = true, bool preserveNumbers = false)
         {
             inputBuilder.SetValue(input);
             TashkeelFixer.RemoveTashkeel(inputBuilder);
@@ -38,7 +43,7 @@ namespace RTLTMPro
             GlyphFixer.Fix(inputBuilder, glyphFixerOutput, preserveNumbers, farsi, fixTextTags);
             //Restore tashkeel to their places.
             TashkeelFixer.RestoreTashkeel(glyphFixerOutput);
-            
+
             TashkeelFixer.FixShaddaCombinations(glyphFixerOutput);
             // Fix flow of the text and put the result in FinalLetters field
             LigatureFixer.Fix(glyphFixerOutput, output, farsi, fixTextTags, preserveNumbers);
@@ -49,5 +54,29 @@ namespace RTLTMPro
             inputBuilder.Clear();
         }
 
+        private static void FixRTLChunked(string input, FastStringBuilder output, bool farsi = true, bool fixTextTags = true, bool preserveNumbers = false)
+        {
+            List<string> chunks = TextUtils.SplitLtrRtlChunks(input);
+
+            var arChunkFixer = new FastStringBuilder(DefaultBufferSize);
+
+            // Loop over chunks. Fix RTL and just append LTR
+            for (int i = 0; i < chunks.Count; i++)
+            {
+                if (TextUtils.IsRTLInput(chunks[i]))
+                {
+                    arChunkFixer.Clear();
+
+                    // Fix the Arabic block of text
+                    FixRTL(chunks[i], arChunkFixer, farsi, fixTextTags, preserveNumbers);
+
+                    output.Append(arChunkFixer.ToString());
+                }
+                else
+                {
+                    output.Append(chunks[i]); // If LTR chunk, just append
+                }
+            }
+        }
     }
 }
