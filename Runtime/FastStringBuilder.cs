@@ -205,10 +205,16 @@ namespace RTLTMPro
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
+
             for (int i = 0; i < length; i++)
             {
-                sb.Append(char.ConvertFromUtf32(array[i]));
+                try
+                {
+                    sb.Append(char.ConvertFromUtf32(array[i]));
+                }
+                catch (Exception) { /* Avoid any conversion exception */ }
             }
+
             return sb.ToString();
         }
 
