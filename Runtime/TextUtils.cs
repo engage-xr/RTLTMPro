@@ -86,6 +86,7 @@ namespace RTLTMPro
         /// <returns><see langword="true" /> if character is supported. otherwise <see langword="false" /></returns>
         public static bool IsRTLCharacter(char ch)
         {
+            if (ch == '\u202E') return true;        // RTL override character
             if (IsHebrewCharacter(ch)) return true;
             if (IsArabicCharacter(ch)) return true;
             return false;
