@@ -67,12 +67,17 @@ namespace RTLTMPro
 
             for (int i = 0; i < text.Length; i++)
             {
-                int unicode32CodePoint = char.ConvertToUtf32(text, i);
-                if (unicode32CodePoint > 0xffff)
+                try
                 {
-                    i++;
+                    int unicode32CodePoint = char.ConvertToUtf32(text, i);
+
+                    if (unicode32CodePoint > 0xffff)
+                    {
+                        i++;
+                    }
+                    array[len++] = unicode32CodePoint;
                 }
-                array[len++] = unicode32CodePoint;
+                catch (Exception) { /* Avoid any conversion exception */ }
             }
 
             length = len;
