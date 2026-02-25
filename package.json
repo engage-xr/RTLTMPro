@@ -28,8 +28,8 @@
   },
   "author": {
     "name": "BenIVRE",
-    "email": "ben@engagexr.co",
-    "url": "https://github.com/BenIVRE"
+    "url": "https://github.com/BenIVRE",
+    "email": "ben@engagexr.co"
   },
   "license": "MIT",
   "repository": {
@@ -42,5 +42,7 @@
   },
   "homepage": "https://github.com/engage-xr/RTLTMPro#readme",
   "category": "Utility",
-  "dependencies": {}
+  "dependencies": {
+    "com.unity.localization": "1.5.9"
+  }
 }

@@ -4,8 +4,10 @@ using UnityEngine;
 
 #if TMP_VERSION_2_1_0_OR_NEWER
 using TMP_UiEditorPanel = TMPro.EditorUtilities.TMP_EditorPanelUI;
-#else
+#elif TMP_VERSION_1_0_0_OR_NEWER
 using TMP_UiEditorPanel = TMPro.EditorUtilities.TMP_UiEditorPanel;
+#else // assume TMP is embedded into ugui 2.0
+using TMP_UiEditorPanel = TMPro.EditorUtilities.TMP_EditorPanelUI;
 #endif
 
 namespace RTLTMPro
