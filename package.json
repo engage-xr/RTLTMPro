@@ -1,7 +1,7 @@
 {
   "name": "com.engage.rtltmpro",
   "displayName": "RTL Text Mesh Pro",
-  "version": "3.4.6-engage.6",
+  "version": "3.4.6-engage.7",
   "unity": "2022.3",
   "description": "This package adds Right-to-left language support to TextMeshPro Unity package. Supports Persian, Arabic and Hebrew.",
   "keywords": [
@@ -28,8 +28,8 @@
   },
   "author": {
     "name": "BenIVRE",
-    "email": "ben@engagexr.co",
-    "url": "https://github.com/BenIVRE"
+    "url": "https://github.com/BenIVRE",
+    "email": "ben@engagexr.co"
   },
   "license": "MIT",
   "repository": {
@@ -42,5 +42,7 @@
   },
   "homepage": "https://github.com/engage-xr/RTLTMPro#readme",
   "category": "Utility",
-  "dependencies": {}
+  "dependencies": {
+    "com.unity.localization": "1.5.9"
+  }
 }
