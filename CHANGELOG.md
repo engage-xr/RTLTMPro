@@ -4,6 +4,18 @@ These are the release notes for the RTLTMPro UPM package.
 The github repository is: https://github.com/engage-xr/RTLTMPro
 The parent repository is: https://github.com/hk1ll3r/RTLTMPro
 
+# v3.4.6-engage.7 (2026/02/25)
+- Unity 6 Compatibility updates to support the new embedded TMP in uGui.
+
+# v3.4.6-engage.6 (2024/09/06)
+- Fix UTF32 Conversion Issue
+
+# v3.4.6-engage.5 (2024/08/29)
+- Fix ArgumentOutOfRangeException in FastStringBuilder
+
+# v3.4.6-engage.4 (2024/08/20)
+- Code Refactor and Bug Fixes
+
 # v3.4.6-engage.3 (2024/08/15)
 - Project restructure
 
